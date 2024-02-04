@@ -1,15 +1,21 @@
 const jwt = require('jsonwebtoken')
+const { decodedToken} = require('../helpers/token')
 
 exports.authVerify = (req, res, next) => {
-  try {
-    let token = req.header.Authorization
-    let decoded = jwt.verify(token, process.env.SECRET_KEY)
-    req.headers.email = decoded
-    next();
-  }catch{
-    return res.json({
-      massage: "invalid user and Authorization failed",
-      success: false,
-    })
-  }
+
+  let token = req.headers['token']
+  let decoded = decodedToken(token);
+  
+    if (decoded === null) {
+        return res.status(401).json({
+            success:false,
+            message:"Unauthorized"
+        })
+    } else {
+       let email=decoded['email'];
+        let id=decoded['id'];
+        req.headers.email=email;
+        req.headers.id=id;
+        next();
+    }
 }

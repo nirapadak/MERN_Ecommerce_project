@@ -6,6 +6,7 @@ const { CategoryController } = require('../controller/catagoryController');
 const ProductController = require('../controller/productController');
 const userController = require('../controller/userController');
 const AuthVarification = require('../middleware/AuthVarification');
+// const token = require('../helpers/token.js');
 
 
 router.get('/brand', BrandList);
@@ -32,7 +33,9 @@ router.get('/removeCardList', ProductController.removeCardList);
 router.post('/userLogin/:email', userController.userLogin);
 router.post('/verifyLogin/:email/:otp', userController.VerifyUser);
 router.get('/send-email/:email', userController.sendOpt)
-router.delete('/userLogout/:email', AuthVarification.authVerify, userController.userLogout);
+router.delete('/userLogout', AuthVarification.authVerify, userController.userLogout);
+router.get('/user-profile', AuthVarification.authVerify, userController.userProfileDetails);
+router.get('/profile-saved', AuthVarification.authVerify, userController.userProfileSaved);
 
 
 
