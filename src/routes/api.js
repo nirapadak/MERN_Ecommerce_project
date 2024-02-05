@@ -35,7 +35,7 @@ router.post('/verifyLogin/:email/:otp', userController.VerifyUser);
 router.get('/send-email/:email', userController.sendOpt)
 router.delete('/userLogout', AuthVarification.authVerify, userController.userLogout);
 router.get('/user-profile', AuthVarification.authVerify, userController.userProfileDetails);
-router.get('/profile-saved', AuthVarification.authVerify, userController.userProfileSaved);
+router.patch('/profile-saved', AuthVarification.authVerify, userController.userProfileSaved);
 
 
 

@@ -16,6 +16,7 @@ exports.userLogin = async (req, res) => {
   try {
     // send otp code -------------------------------------
     await SendEmailUtility(email, EmailText, "Email Verification Code");
+    // user created for email and otp --------------------
     await userOTPService(code, email, userModel);
 
 
@@ -122,7 +123,7 @@ exports.userLogout = async (req, res) => {
 
   try {
     // find  user -----
-    let exists = await userModel.findOne({email: req.headers.email});
+    let exists = await userModel.findById(req.headers.id);
     
     console.log(exists);
     //if don't exist then this massage ---- 
@@ -159,7 +160,13 @@ exports.userProfileDetails = async (req, res) => {
     let userId = req.headers.id;
 // user find and get data -------------------------------------------
     const userDetails = await userModel.findById({ _id: userId },);
-// user show data----------
+    // user show data----------
+    if (!userDetails) {
+      return res.json({
+        success: false,
+        "massage": "user not found",
+      })
+    }
     res.json({
       "success": true,
       "massage": userId,
@@ -185,8 +192,19 @@ exports.userProfileSaved = async (req, res) => {
     let userID = req.headers.id;
     let reqBody = req.body;
 
-    // user profile saved =============================================
+    // user find and check ---------------------------------------
+    let userFindOut = await userModel.findById(
+      userID
+    );
+    if (!userFindOut) {
+      return res.json({
+        "error": "User not found",
+        "massage": "user not found",
+        "success": false,
+      })
+    }
 
+    // user profile saved -------------------------------------------
     await userModel.findOneAndUpdate({_id: userID}, {$set: reqBody}, {upsert: true});
     res.status(200).json({
       "success": true,
