@@ -45,7 +45,11 @@ readdirSync('./src/routes').map((file)=>{app.use('/api/v1', require(`./src/route
 
 
 app.use("*", (req, res) => {
-  return res.status(404).json({message: 'not found'})
+  return res.status(404).json({
+    "error": "Your Route not found",
+    message: 'not found',
+    "success": false
+  })
  })
 
 

@@ -48,6 +48,18 @@ const DataModel = mongoose.Schema({
     required: true,
     enum:['popular','regular','trending','new','top','special'],
   },
+  productManager:{
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
+  categoryID: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
+  brandID: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  }
  
 
 }, {
@@ -55,5 +67,5 @@ const DataModel = mongoose.Schema({
   versionKey: false,
 });
 
-const ProductModel = mongoose.Model('product', DataModel)
+const ProductModel = mongoose.model('product', DataModel)
 module.exports = ProductModel;

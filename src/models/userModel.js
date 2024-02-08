@@ -17,5 +17,4 @@ const DataModel = mongoose.Schema({
   versionKey: false,
 });
 
-const userModel = mongoose.model('User', DataModel)
-module.exports = userModel;
+module.exports = userModel = mongoose.model('User', DataModel)

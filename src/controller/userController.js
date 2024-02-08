@@ -3,6 +3,8 @@ const userModel = require("../models/userModel");
 const userOTPService = require("../services/userService/userOTPService");
 const userVerifyService = require("../services/userService/userVerifyService");
 const jwt = require('jsonwebtoken');
+const profileModel = require("../models/profileModel");
+const { format } = require("morgan");
 
 
 // create an user --------------------------------------------
@@ -158,8 +160,8 @@ exports.userLogout = async (req, res) => {
 exports.userProfileDetails = async (req, res) => {
   try {
     let userId = req.headers.id;
-// user find and get data -------------------------------------------
-    const userDetails = await userModel.findById({ _id: userId },);
+    // user find and get data -------------------------------------------
+    let userDetails = await userModel.findById({ _id: userId }, { otp: 0,createdAt: 0,updatedAt: 0 });
     // user show data----------
     if (!userDetails) {
       return res.json({
@@ -169,8 +171,8 @@ exports.userProfileDetails = async (req, res) => {
     }
     res.json({
       "success": true,
-      "massage": userId,
-      "userDetails": userDetails,
+      "massage": "successful",
+      "data": userDetails
     })
     
 

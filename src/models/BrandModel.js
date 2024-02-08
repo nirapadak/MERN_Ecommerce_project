@@ -11,12 +11,17 @@ const DataModel = mongoose.Schema({
     type: String,
     trim: true,
     required: true,
-  }
+  },
+  brandId: {
+    type: String,
+    unique: true,
+    required: true,
+  },
 
 }, {
   timestamps: true,
   versionKey: false,
 });
 
-const BrandModel = mongoose.Model('Brand', DataModel)
+const BrandModel = mongoose.model('brand', DataModel)
 module.exports = BrandModel;
