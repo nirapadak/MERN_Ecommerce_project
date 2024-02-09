@@ -19,13 +19,14 @@ router.post('/create-product', AuthVerification.authVerify, ProductController.cr
 
 
 router.get('/sliderList', ProductController.sliderList);
-router.get('/categoryByList', ProductController.listByCategory);
 router.get('/listByBrand', ProductController.listByBrand);
 router.get('/listBySimilar', ProductController.listBySimilar);
 router.get('/listByKeyword', ProductController.listByKeyword);
 router.get('/productReview', ProductController.productReview);
 
-// product remarks =============================================
+// product remarks =================product sort============================
+router.get('/product/:brand',ProductController.productByBrand);
+router.get('/product/:category', ProductController.productByCategory);
 router.get('/product/:remark', ProductController.productByRemark);
 
 

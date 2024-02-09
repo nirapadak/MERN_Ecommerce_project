@@ -1,4 +1,6 @@
 const ProductModel = require('../models/productModel');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 // all products get -----------------------------------
 exports.allProduct = async (req, res) => {
@@ -54,21 +56,40 @@ exports.sliderList = async (req, res) => {
 
 
 
-exports.listByCategory = async (req, res) => {
-  return res.status(200).json({
-    success: true,
-    message: "List by category",
-  })
-}
 
 
+exports.productByBrand = async (req, res) => {
+  try {
+    
+    let brand = new ObjectId(req.params.brand);
+    let joinStage1 = { $lookup: { from: "categories", localField: "categoryID", foreignField: "_id", as: "category" } }
+    
+    let joinStage2 = { $lookup: { from: "brands", localField: "brandID", foreignField: "_id", as: "brand" } }
+    
+    let matchStage = { $match: { brandID: brand } };
 
+    let projectionStages = { $project: { "category._id": 0, "brand._id": 0, "remark": 0, } }
 
-exports.listByBrand = async (req, res) => {
-  return res.status(200).json({
-    success: true,
-    message: "List by Brand",
-  })
+    let unWindCategory = { $unwind: "$category" };
+    let unWindBrand = { $unwind: "$brand" };
+
+    // product remark 
+    const data = await ProductModel.aggregate(
+      [matchStage, joinStage1,joinStage2, unWindCategory, unWindBrand, projectionStages]);
+    
+    
+    res.status(200).json({
+      "success": true,
+      "message": "Product List by Brand",
+      "data": data
+    })
+  } catch (error) {
+    res.json({
+      "massage": "failed product by Brand get error",
+      "success": false,
+      "error": error
+    })
+  }
 }
 
 exports.listBySimilar = async (req, res) => {
@@ -100,7 +121,6 @@ exports.productByRemark = async (req, res) => {
     let remark = req.params.remark;
 
 
-    // let data = await ProductModel.find({remark: remark});
     let joinStage1 = {$lookup: { from: "categories", localField: "categoryID", foreignField: "_id", as: "category" } }
     let joinStage2 = {$lookup: { from: "brands", localField: "brandID", foreignField: "_id", as: "brand" } }
     let match = { $match: { remark: remark } };
@@ -129,6 +149,45 @@ exports.productByRemark = async (req, res) => {
   }
 }
 
+
+// product by category get ================================================
+
+exports.productByCategory = async (req, res) => {
+  try {
+    // let category = req.params.category
+    let category_Id = new ObjectId(req.params.category);
+    console.log("my category ================  "+category_Id);
+
+    let joinStage1 = { $lookup: { from: "categories", localField: "categoryID", foreignField: "_id", as: "category" } }
+    
+    let joinStage2 = { $lookup: { from: "brands", localField: "brandID", foreignField: "_id", as: "brand" } }
+    
+    let matchStage = { $match: { categoryID: category_Id } };
+
+    let projectionStages = { $project: { "category._id": 0, "brand._id": 0, "remark": 0, } }
+
+    let unWindCategory = { $unwind: "$category" };
+    let unWindBrand = { $unwind: "$brand" };
+
+    // product remark 
+    const data = await ProductModel.aggregate(
+      [matchStage, joinStage1, joinStage2, unWindCategory, unWindBrand, projectionStages]);
+    
+
+    res.status(200).json({
+      success: true,
+      message: "Product list by category successful",
+      data: data
+    });
+
+  } catch (error) {
+    res.json({
+      "success": false,
+      "massage": "product by category get failed",
+      "error": error
+    })
+  }
+}
 
 
 exports.wishList = async (req, res) => {
