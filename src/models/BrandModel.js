@@ -17,6 +17,10 @@ const DataModel = mongoose.Schema({
     unique: true,
     required: true,
   },
+  brandCreateManager: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  }
 
 }, {
   timestamps: true,
