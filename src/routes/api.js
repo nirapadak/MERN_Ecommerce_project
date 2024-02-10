@@ -1,8 +1,8 @@
 const router = require('express').Router();
 
 
-const { BrandList } = require('../controller/BrandController');
-const { allCategories } = require('../controller/catagoryController');
+const { BrandList, createBrand } = require('../controller/BrandController');
+const { allCategories, createCategory } = require('../controller/catagoryController');
 const profileController = require('../controller/profileController');
 const ProductController = require('../controller/productController');
 const userController = require('../controller/userController');
@@ -10,23 +10,30 @@ const AuthVerification = require('../middleware/AuthVerification');
 // const token = require('../helpers/token.js');
 
 
+// brand =================================================================
 router.get('/brand', BrandList);
+router.post('/brand-create', AuthVerification.authVerify, createBrand);
+router.patch('/brand-update', AuthVerification.authVerify, createBrand);
 
+
+// category ================================================================
 router.get('/category', allCategories);
+router.post('/create-category', AuthVerification.authVerify, createCategory);
+router.patch('/update-category', AuthVerification.authVerify, createCategory);
+
 
 router.get('/all-product', ProductController.allProduct);
 router.post('/create-product', AuthVerification.authVerify, ProductController.createProduct);
 
-
+// product sorting ==============================================================
 router.get('/sliderList', ProductController.sliderList);
-router.get('/listByBrand', ProductController.listByBrand);
-router.get('/listBySimilar', ProductController.listBySimilar);
-router.get('/listByKeyword', ProductController.listByKeyword);
+router.get('/product/:brandID', ProductController.productByBrand);
+router.get('/product/:categoryID', ProductController.productByCategory);
+router.get('/productBySimilar', ProductController.productBySimilar);
+router.get('/productByKeyword', ProductController.productByKeyword);
 router.get('/productReview', ProductController.productReview);
 
-// product remarks =================product sort============================
-router.get('/product/:brand',ProductController.productByBrand);
-router.get('/product/:category', ProductController.productByCategory);
+// product remarks =============================================
 router.get('/product/:remark', ProductController.productByRemark);
 
 

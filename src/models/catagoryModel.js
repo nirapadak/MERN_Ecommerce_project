@@ -11,6 +11,13 @@ const DataModel = mongoose.Schema({
     type: String,
     trim: true,
     required: true,
+  },
+  categoryDes: {
+    type: String,
+  },
+  categoryCreateManager: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
   }
 
 }, {
